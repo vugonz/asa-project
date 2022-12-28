@@ -26,11 +26,11 @@ class Edge {
         }
 
         void printEdge() {
-            printf("Edge of weight %d, destionation Vertix nr %d\n", _weight, _dest);
+            printf("Edge of weight %d, destionation Vertex nr %d\n", _weight, _dest);
         }
 };
 
-class Vertix {
+class Vertex {
     private:
         int _n;
         color _color;
@@ -38,7 +38,7 @@ class Vertix {
         
 
     public:
-        Vertix(int n) {
+        Vertex(int n) {
             _n = n;
             _color = WHITE;
         }
@@ -52,7 +52,7 @@ class Vertix {
         }
 
         /*
-        * Add and edge from this Vertix to conn Vertix
+        * Add and edge from this Vertex to conn Vertex
         */
         void addEdge(Edge conn) {
             _adj.push_back(conn);
@@ -66,8 +66,8 @@ class Vertix {
             return _color;
         }
 
-        void printVertix() {
-            printf("Vertix nr: %d\n", _n);
+        void printVertex() {
+            printf("Vertex nr: %d\n", _n);
             for(Edge e: _adj) {
                 e.printEdge();
             }
@@ -78,40 +78,40 @@ class Vertix {
 
 class Graph {
     public:
-        vector <Vertix> vertixes;
+        vector <Vertex> Vertexes;
         /*
-        * Add Vertix with number n
+        * Add Vertex with number n
         */
-        void addVertix(int n) {
-            vertixes.push_back(Vertix(n));
+        void addVertex(int n) {
+            Vertexes.push_back(Vertex(n));
         }
 
-        vector <Vertix> &getVertixes() {
-            return vertixes;
+        vector <Vertex> &getVertexes() {
+            return Vertexes;
         }
 
         /*
-        * Get reference for Vertix with number n
+        * Get reference for Vertex with number n
         */
-        Vertix &getVertix(int n) {
-            return vertixes[n - 1]; 
+        Vertex &getVertex(int n) {
+            return Vertexes[n - 1]; 
         }
 
         void printGraph() {
-            for (Vertix v: vertixes) {
-                v.printVertix();
+            for (Vertex v: Vertexes) {
+                v.printVertex();
             }
         }
 
 };
 
 
-void DfsVisit(Graph &g, Vertix &v) {
+void dfsVisit(Graph &g, Vertex &v) {
     v.setColor(GRAY);
     for(Edge e: v.getEdges()) {
-        Vertix &visitedVector = g.getVertix(e.getDest());
+        Vertex &visitedVector = g.getVertex(e.getDest());
         if (visitedVector.getColor() == WHITE) {
-            DfsVisit(g, visitedVector);
+            dfsVisit(g, visitedVector);
         }
     }
     v.setColor(BLACK);
@@ -123,23 +123,23 @@ int main() {
 
     Graph graph;
 
-    // Initialize vertixes
+    // Initialize Vertexes
     for(int i = 0; i < n1; ++i) {
-        graph.addVertix(i + 1);
+        graph.addVertex(i + 1);
     }
 
     int v1, v2, w; 
     // Read edges
     for(int i = 0; i < n2; ++i) {
         scanf("%d %d %d", &v1, &v2, &w);
-        graph.getVertix(v1).addEdge(Edge(w, v2));
-        graph.getVertix(v2).addEdge(Edge(w, v1));
+        graph.getVertex(v1).addEdge(Edge(w, v2));
+        graph.getVertex(v2).addEdge(Edge(w, v1));
     }
 
-    // Using DFS to determine cycles in graph
-    for(Vertix v: graph.getVertixes()) {
+    // Using dfs to determine cycles in graph
+    for(Vertex v: graph.getVertexes()) {
         if (v.getColor() == WHITE) {
-            DfsVisit(graph, v);
+            dfsVisit(graph, v);
             printf("One cyclig graph found\n");
         }
     }
