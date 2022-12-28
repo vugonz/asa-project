@@ -9,20 +9,26 @@ enum color {WHITE, GRAY, BLACK};
 class Edge {
     private:
         int _weight;
-        int _dest;
+        int _v1;
+        int _v2;
 
     public:
-        Edge(int weight, int dest) {
+        Edge(int weight, int v1, int v2) {
             _weight = weight;
-            _dest = dest;
+            _v1 = v1;
+            _v2 = v2;
         }
 
         int getWeight() {
             return _weight;
         }
 
-        int getDest() {
-            return _dest;
+        int getV1() {
+            return _v1;
+        }
+
+        int getV2() {
+            return _v2;
         }
 };
 
@@ -88,15 +94,18 @@ class Graph {
 };
 
 
-void dfsVisit(Graph &g, Vertex &v) {
+void dfsVisit(Graph &g, Vertex &v, Graph &g2) {
     v.setColor(GRAY);
     for(Edge e: v.getEdges()) {
-        Vertex &visitedVector = g.getVertex(e.getDest());
-        if (visitedVector.getColor() == WHITE) {
-            dfsVisit(g, visitedVector);
+        Vertex &visitedVertix = g.getVertex(e.getV2());
+        if (visitedVertix.getColor() == WHITE) {
+            dfsVisit(g, visitedVertix, g2);
         }
     }
-    v.setColor(BLACK);
+    if (v.getColor() == GRAY) {
+        v.setColor(BLACK);
+        g2.addVertex(v.getNumber());
+    }
 }
 
 int main() {
@@ -114,15 +123,19 @@ int main() {
     // Read edges
     for(int i = 0; i < n2; ++i) {
         scanf("%d %d %d", &v1, &v2, &w);
-        graph.getVertex(v1).addEdge(Edge(w, v2));
-        graph.getVertex(v2).addEdge(Edge(w, v1));
+        graph.getVertex(v1).addEdge(Edge(w, v1,v2));
+        graph.getVertex(v2).addEdge(Edge(w, v1, v2));
     }
 
     // Using dfs to determine cycles in graph
-    for(Vertex v: graph.getVertexes()) {
+    for(Vertex &v: graph.getVertexes()) {
         if (v.getColor() == WHITE) {
-            dfsVisit(graph, v);
+            Graph cyclicGraph;
+            dfsVisit(graph, v, cyclicGraph);
             printf("One cyclig graph found\n");
+            for (Vertex v: cyclicGraph.getVertexes()) {
+                printf("Vertex nr: %d\n", v.getNumber());
+            }
         }
     }
 }
