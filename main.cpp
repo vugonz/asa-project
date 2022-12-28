@@ -24,10 +24,6 @@ class Edge {
         int getDest() {
             return _dest;
         }
-
-        void printEdge() {
-            printf("Edge of weight %d, destionation Vertex nr %d\n", _weight, _dest);
-        }
 };
 
 class Vertex {
@@ -35,7 +31,6 @@ class Vertex {
         int _n;
         color _color;
         vector<Edge> _adj;
-        
 
     public:
         Vertex(int n) {
@@ -43,12 +38,20 @@ class Vertex {
             _color = WHITE;
         }
 
-        void setColor(enum color newColor) {
-            _color = newColor;
-        }
-
         int getNumber() {
             return _n;
+        }
+
+        enum color getColor() {
+            return _color;
+        }
+        
+        vector<Edge> &getEdges() {
+            return _adj;
+        }
+        
+        void setColor(enum color newColor) {
+            _color = newColor;
         }
 
         /*
@@ -57,52 +60,31 @@ class Vertex {
         void addEdge(Edge conn) {
             _adj.push_back(conn);
         }
-
-        vector<Edge> getEdges() {
-            return _adj;
-        }
-
-        enum color getColor() {
-            return _color;
-        }
-
-        void printVertex() {
-            printf("Vertex nr: %d\n", _n);
-            for(Edge e: _adj) {
-                e.printEdge();
-            }
-            printf("\n");
-        }
 };
 
 
 class Graph {
+    private:
+        vector <Vertex> vertexes;
+
     public:
-        vector <Vertex> Vertexes;
         /*
         * Add Vertex with number n
         */
         void addVertex(int n) {
-            Vertexes.push_back(Vertex(n));
+            vertexes.push_back(Vertex(n));
         }
 
         vector <Vertex> &getVertexes() {
-            return Vertexes;
+            return vertexes;
         }
 
         /*
         * Get reference for Vertex with number n
         */
         Vertex &getVertex(int n) {
-            return Vertexes[n - 1]; 
+            return vertexes[n - 1]; 
         }
-
-        void printGraph() {
-            for (Vertex v: Vertexes) {
-                v.printVertex();
-            }
-        }
-
 };
 
 
@@ -124,8 +106,8 @@ int main() {
     Graph graph;
 
     // Initialize Vertexes
-    for(int i = 0; i < n1; ++i) {
-        graph.addVertex(i + 1);
+    for(int i = 1; i <= n1; ++i) {
+        graph.addVertex(i);
     }
 
     int v1, v2, w; 
